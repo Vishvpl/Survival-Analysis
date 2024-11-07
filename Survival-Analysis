@@ -1,0 +1,23 @@
+library(survival)
+library(survminer)
+library(dplyr)
+data(lung)
+head(lung)
+lung$status <- factor(lung$status, labels = c("Alive", "Dead"))
+surv_object <- Surv(time = lung$time, event = lung$status == "Dead")
+km_fit <- survfit(surv_object ~ 1)
+ggsurvplot(km_fit,
+           data = lung,
+           title = "Kaplan-Meier Survival Curve for Lung Cancer Patients",
+           xlab = "Time (days)",
+           ylab = "Survival Probability",
+           palette = "Dark2",
+           conf.int = TRUE)
+km_fit_sex <- survfit(surv_object ~ sex, data = lung)
+ggsurvplot(km_fit_sex,
+           data = lung,
+           title = "Survival Curves by Sex",
+           xlab = "Time (days)",
+           ylab = "Survival Probability",
+           palette = c("#E7B800", "#2E9FDF"),
+           conf.int = TRUE)
